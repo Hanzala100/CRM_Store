@@ -48,8 +48,7 @@ export class CartPage implements OnInit {
   async removeItem(itemId: number) {
     this.removingItemId = itemId;
     try {
-      const obs = await this.cartService.removeFromCart(itemId);
-      obs.subscribe({
+      (await this.cartService.removeFromCart(itemId)).subscribe({
         next: () => {
           this.toast.show('Item removed from cart', 2000, 'info');
           this.removingItemId = null;
@@ -64,7 +63,29 @@ export class CartPage implements OnInit {
     }
   }
 
+  async updateQuantity(item: CartItem, delta: number) {
+    const newQty = item.quantity + delta;
+    if (newQty <= 0) {
+      this.removeItem(item.id);
+      return;
+    }
+
+    this.removingItemId = item.id;
+    (await this.cartService.addToCart(item.product_id, delta)).subscribe({
+      next: () => {
+        this.removingItemId = null;
+      },
+      error: () => {
+        this.toast.show('Could not update quantity', 3000, 'error');
+        this.removingItemId = null;
+      }
+    });
+  }
+
   getProductImage(item: CartItem): string {
+    if (item.product.images && item.product.images.length > 0) {
+      return item.product.images[0];
+    }
     return 'https://placehold.co/80x80/f1f5f9/94a3b8?text=' + encodeURIComponent(item.product.name);
   }
 }

@@ -86,10 +86,19 @@ export class CartService {
   }
 
   get cartTotal(): number {
-    const items = this.cartSubject.value?.items ?? [];
-    return items.reduce((acc, item) => {
+    return (this.cartSubject.value?.items ?? []).reduce((acc, item) => {
       const price = Number(item.product.price);
       return acc + (isNaN(price) ? 0 : price * item.quantity);
     }, 0);
+  }
+
+  getProductQuantity(productId: number): number {
+    const item = this.cartSubject.value?.items?.find(i => i.product_id === productId);
+    return item?.quantity ?? 0;
+  }
+
+  getCartItemId(productId: number): number | null {
+    const item = this.cartSubject.value?.items?.find(i => i.product_id === productId);
+    return item?.id ?? null;
   }
 }

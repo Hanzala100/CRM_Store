@@ -120,21 +120,50 @@
               </span>
             </div>
 
-            <button (click)="addToCart(product)"
-              [disabled]="product.stock === 0 || addingToCartId === product.id"
-              class="mt-3 w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
-                bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm hover:shadow-md
-                disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none
-                flex items-center justify-center gap-2">
-              <span *ngIf="addingToCartId !== product.id">Add to Cart</span>
-              <span *ngIf="addingToCartId === product.id" class="flex items-center gap-2">
-                <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
-                </svg>
-                Adding...
-              </span>
-            </button>
+            <!-- Add to Cart / Quantity Controls -->
+            <div class="mt-3 h-[42px] content-center">
+              <!-- Add to Cart (Only if not in cart) -->
+              <button *ngIf="getQuantity(product.id) === 0"
+                (click)="addToCart(product)"
+                [disabled]="product.stock === 0 || addingToCartId === product.id"
+                class="w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
+                  bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm hover:shadow-md
+                  disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none
+                  flex items-center justify-center gap-2">
+                <span *ngIf="addingToCartId !== product.id">Add to Cart</span>
+                <span *ngIf="addingToCartId === product.id" class="flex items-center gap-2">
+                  <svg class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                  </svg>
+                  Adding...
+                </span>
+              </button>
+
+              <!-- Quantity Controls (If in cart) -->
+              <div *ngIf="getQuantity(product.id) > 0"
+                class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl p-1 shadow-sm">
+                <button (click)="updateQuantity(product, -1)"
+                  [disabled]="addingToCartId === product.id"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-indigo-600 transition-all hover:shadow-sm disabled:opacity-50">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                </button>
+                
+                <div class="flex-1 text-center font-bold text-slate-900 text-sm flex items-center justify-center gap-2">
+                  <svg *ngIf="addingToCartId === product.id" class="animate-spin w-3 h-3 text-indigo-500" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                  </svg>
+                  <span>{{getQuantity(product.id)}}</span>
+                </div>
+
+                <button (click)="updateQuantity(product, 1)"
+                  [disabled]="addingToCartId === product.id || getQuantity(product.id) >= product.stock"
+                  class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 hover:bg-white hover:text-indigo-600 transition-all hover:shadow-sm disabled:opacity-50">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

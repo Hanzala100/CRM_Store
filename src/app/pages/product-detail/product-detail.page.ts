@@ -26,7 +26,7 @@ export class ProductDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService,
+    public cartService: CartService,
     private toast: ToastService,
   ) {}
 
@@ -43,6 +43,9 @@ export class ProductDetailPage implements OnInit {
         if (res.success) {
           this.product = res.data;
           this.selectedImageIndex = 0;
+          // Sync local quantity with cart
+          const cartQty = this.cartService.getProductQuantity(this.product.id);
+          this.quantity = cartQty > 0 ? cartQty : 1;
         }
         this.isLoading = false;
       },
@@ -88,19 +91,52 @@ export class ProductDetailPage implements OnInit {
     if (!this.product) return;
     this.isAddingToCart = true;
     try {
-      const obs = await this.cartService.addToCart(this.product.id, this.quantity);
-      obs.subscribe({
+      const currentQty = this.cartService.getProductQuantity(this.product.id);
+      // Delta to reach the target quantity
+      const delta = this.quantity - currentQty;
+      
+      if (delta === 0) {
+        this.isAddingToCart = false;
+        return;
+      }
+
+      (await this.cartService.addToCart(this.product.id, delta)).subscribe({
         next: (res) => {
-          if (res.success) this.toast.show(`"${this.product!.name}" added to cart!`, 2500, 'success');
+          if (res.success) {
+            this.toast.show(currentQty === 0 ? `"${this.product!.name}" added to cart!` : 'Cart updated!', 2500, 'success');
+          }
           this.isAddingToCart = false;
         },
         error: () => {
-          this.toast.show('Could not add to cart', 3000, 'error');
+          this.toast.show('Could not update cart', 3000, 'error');
           this.isAddingToCart = false;
         }
       });
     } catch {
       this.isAddingToCart = false;
     }
+  }
+
+  async removeItem() {
+    if (!this.product) return;
+    const itemId = this.cartService.getCartItemId(this.product.id);
+    if (!itemId) return;
+
+    this.isAddingToCart = true;
+    (await this.cartService.removeFromCart(itemId)).subscribe({
+      next: () => {
+        this.toast.show(`Removed "${this.product!.name}" from cart`, 2000, 'info');
+        this.quantity = 1;
+        this.isAddingToCart = false;
+      },
+      error: () => {
+        this.toast.show('Could not remove item', 3000, 'error');
+        this.isAddingToCart = false;
+      }
+    });
+  }
+
+  isInCart(): boolean {
+    return this.product ? this.cartService.getProductQuantity(this.product.id) > 0 : false;
   }
 }

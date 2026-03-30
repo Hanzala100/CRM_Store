@@ -37,7 +37,7 @@ export class HomePage implements OnInit {
   constructor(
     private productService: ProductService,
     private authService: AuthService,
-    private cartService: CartService,
+    public cartService: CartService,
     private toast: ToastService,
   ) {}
 
@@ -69,8 +69,7 @@ export class HomePage implements OnInit {
   async addToCart(product: Product) {
     this.addingToCartId = product.id;
     try {
-      const obs = await this.cartService.addToCart(product.id, 1);
-      obs.subscribe({
+      (await this.cartService.addToCart(product.id, 1)).subscribe({
         next: (res) => {
           if (res.success) this.toast.show(`"${product.name}" added to cart!`, 2500, 'success');
           this.addingToCartId = null;
@@ -83,6 +82,44 @@ export class HomePage implements OnInit {
     } catch {
       this.addingToCartId = null;
     }
+  }
+
+  async updateQuantity(product: Product, delta: number) {
+    const currentQty = this.cartService.getProductQuantity(product.id);
+    const newQty = currentQty + delta;
+
+    if (newQty <= 0) {
+      const itemId = this.cartService.getCartItemId(product.id);
+      if (itemId) {
+        this.addingToCartId = product.id;
+        (await this.cartService.removeFromCart(itemId)).subscribe({
+          next: () => {
+            this.toast.show(`Removed "${product.name}" from cart`, 2000, 'info');
+            this.addingToCartId = null;
+          },
+          error: () => {
+            this.toast.show('Could not remove item', 3000, 'error');
+            this.addingToCartId = null;
+          }
+        });
+      }
+    } else {
+      this.addingToCartId = product.id;
+      // Note: Assumes API addToCart with 1 increments, and -1 decrements
+      (await this.cartService.addToCart(product.id, delta)).subscribe({
+        next: () => {
+          this.addingToCartId = null;
+        },
+        error: () => {
+          this.toast.show('Could not update quantity', 3000, 'error');
+          this.addingToCartId = null;
+        }
+      });
+    }
+  }
+
+  getQuantity(productId: number): number {
+    return this.cartService.getProductQuantity(productId);
   }
 
   getFirstImage(product: Product): string {
