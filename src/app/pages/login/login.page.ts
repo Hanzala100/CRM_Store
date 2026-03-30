@@ -36,11 +36,18 @@ export class LoginPage {
     this.isLoading = true;
     this.authService.login({ email: this.email, password: this.password, tenantId: this.tenantId })
       .subscribe({
-        next: async (res) => {
+        next: (res) => {
           if (res.success) {
-            await this.cartService.syncCart();
-            this.toast.show('Welcome back!', 2500, 'success');
-            this.router.navigate(['/home']);
+            this.cartService.syncCart().subscribe({
+              next: () => {
+                this.toast.show('Welcome back!', 2500, 'success');
+                this.router.navigate(['/home']);
+              },
+              error: () => {
+                // Still navigate even if sync fails, but maybe log it
+                this.router.navigate(['/home']);
+              }
+            });
           }
           this.isLoading = false;
         },

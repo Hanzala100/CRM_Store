@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, from, switchMap } from 'rxjs';
 import { Cart } from '../interfaces/cart.model';
 import { ApiResponse } from '../interfaces/Response.model';
 import { environment } from '../../environments/environment';
@@ -46,13 +46,11 @@ export class CartService {
     return headers;
   }
 
-  async fetchCart(): Promise<void> {
-    const headers = await this.buildHeaders();
-    this.http.get<ApiResponse<Cart>>(
-      `${environment.apiUrl}/store/cart`, { headers }
-    ).subscribe(res => {
-      if (res.success) this.cartSubject.next(res.data);
-    });
+  fetchCart(): Observable<ApiResponse<Cart>> {
+    return from(this.buildHeaders()).pipe(
+      switchMap(headers => this.http.get<ApiResponse<Cart>>(`${environment.apiUrl}/store/cart`, { headers })),
+      tap(res => { if (res.success) this.cartSubject.next(res.data); })
+    );
   }
 
   async addToCart(productId: number, quantity: number): Promise<Observable<ApiResponse<Cart>>> {
@@ -66,23 +64,21 @@ export class CartService {
     );
   }
 
-  async removeFromCart(itemId: number): Promise<Observable<ApiResponse<any>>> {
+  async removeFromCart(itemId: number): Promise<Observable<ApiResponse<Cart>>> {
     const headers = await this.buildHeaders();
     return this.http.delete<ApiResponse<any>>(
       `${environment.apiUrl}/store/cart/${itemId}`,
       { headers }
     ).pipe(
-      tap(res => { if (res.success) this.fetchCart(); })
+      switchMap(() => this.fetchCart())
     );
   }
 
-  async syncCart(): Promise<void> {
-    const headers = await this.buildHeaders();
-    this.http.post<ApiResponse<Cart>>(
-      `${environment.apiUrl}/store/cart/sync`, {}, { headers }
-    ).subscribe(res => {
-      if (res.success) this.cartSubject.next(res.data);
-    });
+  syncCart(): Observable<ApiResponse<Cart>> {
+    return from(this.buildHeaders()).pipe(
+      switchMap(headers => this.http.post<ApiResponse<Cart>>(`${environment.apiUrl}/store/cart/sync`, {}, { headers })),
+      tap(res => { if (res.success) this.cartSubject.next(res.data); })
+    );
   }
 
   get cartItemCount(): number {
@@ -90,6 +86,10 @@ export class CartService {
   }
 
   get cartTotal(): number {
-    return this.cartSubject.value?.total ?? 0;
+    const items = this.cartSubject.value?.items ?? [];
+    return items.reduce((acc, item) => {
+      const price = Number(item.product.price);
+      return acc + (isNaN(price) ? 0 : price * item.quantity);
+    }, 0);
   }
 }

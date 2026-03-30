@@ -34,6 +34,7 @@ export class NavbarComponent implements OnInit {
 
   async logout() {
     await this.authService.logout();
+    this.cartService.fetchCart().subscribe(); // Clear/refresh cart
     this.router.navigate(['/home']);
   }
 }

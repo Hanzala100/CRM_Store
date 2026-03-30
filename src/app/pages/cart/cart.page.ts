@@ -26,11 +26,12 @@ export class CartPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.cartService.cart$.subscribe(cart => {
       this.cart = cart;
       this.isLoading = false;
     });
-    this.cartService.fetchCart();
+    this.cartService.fetchCart().subscribe();
   }
 
   get items(): CartItem[] {
@@ -38,7 +39,10 @@ export class CartPage implements OnInit {
   }
 
   get total(): number {
-    return this.cart?.total ?? 0;
+    return this.items.reduce((acc, item) => {
+      const price = Number(item.product.price);
+      return acc + (isNaN(price) ? 0 : price * item.quantity);
+    }, 0);
   }
 
   async removeItem(itemId: number) {

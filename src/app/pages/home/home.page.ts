@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { ProductService } from '../../services/product.service';
+import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
 import { Product } from '../../interfaces/product.model';
@@ -35,13 +36,17 @@ export class HomePage implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private authService: AuthService,
     private cartService: CartService,
     private toast: ToastService,
   ) {}
 
   ngOnInit() {
-    this.loadProducts();
-    this.cartService.fetchCart();
+    // Refresh data whenever user state changes (login/logout)
+    this.authService.user$.subscribe(() => {
+      this.loadProducts();
+      this.cartService.fetchCart().subscribe();
+    });
   }
 
   loadProducts() {
