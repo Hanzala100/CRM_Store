@@ -1,0 +1,82 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 flex items-center justify-center px-4 py-16 font-sans">
+
+  <!-- Background decor -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-purple-100/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+  </div>
+
+  <div class="relative w-full max-w-md">
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-4">
+        <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-md">
+          <span class="text-white font-bold">S</span>
+        </div>
+        <span class="text-slate-900 font-bold text-xl">Store</span>
+      </div>
+      <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Create your account</h1>
+      <p class="text-slate-500 mt-1 text-sm">Join thousands of happy customers</p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 space-y-5">
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+        <input type="email" [(ngModel)]="email" placeholder="you@example.com"
+          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400
+                 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition-all">
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+        <div class="relative">
+          <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" placeholder="Min. 8 characters"
+            class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 pr-11 text-sm text-slate-900 placeholder-slate-400
+                   focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition-all">
+          <button (click)="showPassword = !showPassword" type="button"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label class="block text-sm font-semibold text-slate-700 mb-1.5">Confirm Password</label>
+        <input type="password" [(ngModel)]="confirmPassword" placeholder="Repeat password"
+          class="w-full bg-white border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400
+                 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-400 transition-all">
+      </div>
+
+      <!-- Submit -->
+      <button (click)="register()" [disabled]="isLoading"
+        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 rounded-xl
+               hover:from-indigo-700 hover:to-purple-700 shadow-md hover:shadow-lg
+               transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">
+        <svg *ngIf="isLoading" class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+        </svg>
+        {{isLoading ? 'Creating account...' : 'Create Account'}}
+      </button>
+
+      <p class="text-center text-sm text-slate-500">
+        Already have an account?
+        <a routerLink="/login" class="text-indigo-600 font-semibold hover:text-indigo-700 ml-1">Sign in</a>
+      </p>
+    </div>
+
+    <p class="text-center text-xs text-slate-400 mt-6">
+      <a routerLink="/home" class="hover:text-indigo-600 transition-colors">← Back to Store</a>
+    </p>
+  </div>
+
+  <app-toast-container></app-toast-container>
+</div>

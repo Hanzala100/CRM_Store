@@ -1,0 +1,7 @@
+{
+  "name": "Teg X Tridentity",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
