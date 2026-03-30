@@ -21,7 +21,7 @@ export class ProductDetailPage implements OnInit {
   isLoading = true;
   isAddingToCart = false;
   quantity = 1;
-  selectedImage = '';
+  selectedImageIndex = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class ProductDetailPage implements OnInit {
       next: (res) => {
         if (res.success) {
           this.product = res.data;
-          this.selectedImage = this.getFirstImage(res.data);
+          this.selectedImageIndex = 0;
         }
         this.isLoading = false;
       },
@@ -53,14 +53,27 @@ export class ProductDetailPage implements OnInit {
     });
   }
 
-  getFirstImage(product: Product): string {
-    return (product.images && product.images.length > 0)
-      ? product.images[0]
-      : 'https://placehold.co/600x500/f1f5f9/94a3b8?text=' + encodeURIComponent(product?.name ?? 'Product');
+  get selectedImage(): string {
+    if (this.product && this.product.images && this.product.images.length > 0) {
+      return this.product.images[this.selectedImageIndex];
+    }
+    return 'https://placehold.co/600x500/f1f5f9/94a3b8?text=' + encodeURIComponent(this.product?.name ?? 'Product');
   }
 
-  selectImage(img: string) {
-    this.selectedImage = img;
+  selectImage(index: number) {
+    this.selectedImageIndex = index;
+  }
+
+  nextImage() {
+    if (this.product && this.product.images) {
+      this.selectedImageIndex = (this.selectedImageIndex + 1) % this.product.images.length;
+    }
+  }
+
+  prevImage() {
+    if (this.product && this.product.images) {
+      this.selectedImageIndex = (this.selectedImageIndex - 1 + this.product.images.length) % this.product.images.length;
+    }
   }
 
   increment() {

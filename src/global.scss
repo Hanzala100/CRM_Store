@@ -85,3 +85,14 @@ body {
 * {
   font-family: var(--font-sans);
 }
+
+/* ============================================================
+   HIDE SCROLLBAR UTILITY
+   ============================================================ */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
