@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { IonContent } from '@ionic/angular/standalone';
 import { AuthUser } from '../../interfaces/auth.model';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
@@ -11,7 +12,7 @@ import { ToastService } from '../../services/toast.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FooterComponent, ToastContainerComponent],
+  imports: [CommonModule, RouterLink, IonContent, NavbarComponent, FooterComponent, ToastContainerComponent],
   templateUrl: './profile.page.html',
 })
 export class ProfilePage implements OnInit {

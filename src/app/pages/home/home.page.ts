@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { IonContent } from '@ionic/angular/standalone';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
@@ -16,6 +17,7 @@ import { ToastContainerComponent } from '../../shared/toast-container/toast-cont
   imports: [
     CommonModule,
     RouterLink,
+    IonContent,
     NavbarComponent,
     FooterComponent,
     SkeletonCardComponent,
@@ -48,7 +50,7 @@ export class HomePage implements OnInit {
       next: (res) => {
         if (res.success) {
           const data = res.data as any;
-          this.products = data?.rows || (Array.isArray(data) ? data : []);
+          this.products = data?.products || data?.rows || (Array.isArray(data) ? data : []);
         }
         this.isLoading = false;
       },

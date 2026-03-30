@@ -16,6 +16,8 @@ export interface Category {
 }
 
 export interface ProductListResponse {
-  rows: Product[];
-  count: number;
+  products: Product[];
+  total: number;
+  page: number;
+  limit: number;
 }

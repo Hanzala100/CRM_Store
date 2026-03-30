@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { IonContent } from '@ionic/angular/standalone';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { ToastContainerComponent } from '../../shared/toast-container/toast-container.component';
@@ -9,7 +10,7 @@ import { ToastContainerComponent } from '../../shared/toast-container/toast-cont
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ToastContainerComponent],
+  imports: [CommonModule, FormsModule, RouterLink, IonContent, ToastContainerComponent],
   templateUrl: './register.page.html',
 })
 export class RegisterPage {

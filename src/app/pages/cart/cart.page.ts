@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { IonContent } from '@ionic/angular/standalone';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
 import { Cart, CartItem } from '../../interfaces/cart.model';
@@ -11,7 +12,7 @@ import { ToastContainerComponent } from '../../shared/toast-container/toast-cont
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FooterComponent, ToastContainerComponent],
+  imports: [CommonModule, RouterLink, IonContent, NavbarComponent, FooterComponent, ToastContainerComponent],
   templateUrl: './cart.page.html',
 })
 export class CartPage implements OnInit {

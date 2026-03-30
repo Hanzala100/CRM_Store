@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { IonContent } from '@ionic/angular/standalone';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { ToastService } from '../../services/toast.service';
@@ -12,7 +13,7 @@ import { ToastContainerComponent } from '../../shared/toast-container/toast-cont
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FooterComponent, ToastContainerComponent],
+  imports: [CommonModule, RouterLink, IonContent, NavbarComponent, FooterComponent, ToastContainerComponent],
   templateUrl: './product-detail.page.html',
 })
 export class ProductDetailPage implements OnInit {
