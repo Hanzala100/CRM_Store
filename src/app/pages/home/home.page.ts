@@ -11,6 +11,7 @@ import { NavbarComponent } from '../../shared/navbar/navbar.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
 import { SkeletonCardComponent } from '../../shared/skeleton-card/skeleton-card.component';
 import { ToastContainerComponent } from '../../shared/toast-container/toast-container.component';
+import { StoreConfigService } from '../../services/store-config.service';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,7 @@ export class HomePage implements OnInit {
     private authService: AuthService,
     public cartService: CartService,
     private toast: ToastService,
+    public storeConfigService: StoreConfigService
   ) {}
 
   ngOnInit() {

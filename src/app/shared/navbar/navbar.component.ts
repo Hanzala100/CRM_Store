@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { Router } from '@angular/router';
+import { StoreConfigService } from '../../services/store-config.service';
 
 @Component({
   selector: 'app-navbar',
@@ -19,6 +20,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     public authService: AuthService,
     public cartService: CartService,
+    public storeConfigService: StoreConfigService,
     private router: Router
   ) {}
 

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
-import { ThemeService } from './services/theme.service';
+import { StoreConfigService } from './services/store-config.service';
 
 @Component({
   selector: 'app-root',
@@ -8,9 +8,9 @@ import { ThemeService } from './services/theme.service';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent implements OnInit {
-  constructor(private themeService: ThemeService) {}
+  constructor(private storeConfigService: StoreConfigService) {}
 
   ngOnInit() {
-    this.themeService.loadTheme();
+    this.storeConfigService.loadConfig().subscribe();
   }
 }

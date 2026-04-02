@@ -10,6 +10,8 @@ module.exports = {
         poppins: ['"Poppins"', 'sans-serif'],
       },
       colors: {
+        primary: 'var(--primary-color)',
+        accent: 'var(--accent-color)',
         // Storefront design system
         indigo: {
           50:  '#eef2ff',

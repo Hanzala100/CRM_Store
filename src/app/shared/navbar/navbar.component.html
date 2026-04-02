@@ -1,13 +1,14 @@
-<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
+<nav *ngIf="storeConfigService.config$ | async as config" class="sticky top-0 z-50 bg-white/90 backdrop-blur-lg border-b border-slate-200">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
       <!-- Logo -->
       <a routerLink="/home" class="flex items-center gap-2 group">
-        <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-all">
-          <span class="text-white font-bold text-sm">S</span>
+        <div *ngIf="!config.brand.logo_url" class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-all">
+          <span class="text-white font-bold text-sm">{{config.brand.store_name[0] || 'S'}}</span>
         </div>
-        <span class="text-slate-900 font-semibold text-lg tracking-tight">Store</span>
+        <img *ngIf="config.brand.logo_url" [src]="config.brand.logo_url" alt="Logo" class="max-w-[120px] max-h-8 object-contain">
+        <span class="text-slate-900 font-semibold text-lg tracking-tight">{{config.brand.store_name}}</span>
       </a>
 
       <!-- Desktop Nav -->
@@ -32,7 +33,7 @@
             </svg>
           </div>
           <span *ngIf="cartCount > 0"
-            class="absolute -top-1 -right-1 bg-indigo-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold shadow-sm">
+            class="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold shadow-sm">
             {{cartCount}}
           </span>
         </a>
@@ -44,7 +45,7 @@
             Sign in
           </a>
           <a routerLink="/register"
-            class="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-xl hover:bg-indigo-700 shadow-sm hover:shadow-md transition-all">
+            class="bg-primary text-white text-sm font-medium px-4 py-2 rounded-xl hover:opacity-90 shadow-sm hover:shadow-md transition-all">
             Get Started
           </a>
         </ng-container>
