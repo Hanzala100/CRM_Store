@@ -53,7 +53,27 @@ export class StoreConfigService {
   loadConfig(): Observable<StoreConfig> {
     const url = `${environment.apiUrl}/store/config?domain=${STORE_DOMAIN}`;
     return this.http.get<{ status: number; message: string; data: StoreConfig }>(url).pipe(
-      map(res => res.data),
+      map((res: any) => {
+        // Handle both `{ data: config }` and raw `config` payload shapes
+        const data = res?.data || res;
+        
+        if (!data || Object.keys(data).length === 0) return DEFAULT_CONFIG;
+        
+        return {
+          ...DEFAULT_CONFIG,
+          ...data,
+          brand: { ...DEFAULT_CONFIG.brand, ...(data.brand || {}) },
+          theme: { ...DEFAULT_CONFIG.theme, ...(data.theme || {}) },
+          hero: { ...DEFAULT_CONFIG.hero, ...(data.hero || {}) },
+          layout: { ...DEFAULT_CONFIG.layout, ...(data.layout || {}) },
+          footer: {
+            ...DEFAULT_CONFIG.footer,
+            ...(data.footer || {}),
+            social_links: { ...DEFAULT_CONFIG.footer?.social_links, ...(data.footer?.social_links || {}) },
+            contact_info: { ...DEFAULT_CONFIG.footer?.contact_info, ...(data.footer?.contact_info || {}) }
+          }
+        } as StoreConfig;
+      }),
       tap(config => {
         this.configSubject.next(config);
         this.applyTheme(config);
@@ -61,6 +81,7 @@ export class StoreConfigService {
       }),
       catchError(() => {
         // Silently fall back to defaults – the UI will still render
+        this.configSubject.next(DEFAULT_CONFIG);
         this.applyTheme(DEFAULT_CONFIG);
         this.applyBrand(DEFAULT_CONFIG);
         return of(DEFAULT_CONFIG);

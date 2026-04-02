@@ -37,7 +37,7 @@ export class HomePage implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private authService: AuthService,
+    public authService: AuthService,
     public cartService: CartService,
     private toast: ToastService,
     public storeConfigService: StoreConfigService
@@ -47,7 +47,9 @@ export class HomePage implements OnInit {
     // Refresh data whenever user state changes (login/logout)
     this.authService.user$.subscribe(() => {
       this.loadProducts();
-      this.cartService.fetchCart().subscribe();
+      if (this.authService.isLoggedIn) {
+        this.cartService.fetchCart().subscribe();
+      }
     });
   }
 
@@ -55,9 +57,10 @@ export class HomePage implements OnInit {
     this.isLoading = true;
     this.productService.getProducts(1, 12).subscribe({
       next: (res) => {
-        if (res.success) {
-          const data = res.data as any;
-          this.products = data?.products || data?.rows || (Array.isArray(data) ? data : []);
+        if (res && res.data && res.data.products) {
+          this.products = res.data.products;
+        } else if (res && Array.isArray(res.data)) {
+          this.products = res.data;
         }
         this.isLoading = false;
       },

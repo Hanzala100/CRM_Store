@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { IonContent } from '@ionic/angular/standalone';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { Product } from '../../interfaces/product.model';
 import { NavbarComponent } from '../../shared/navbar/navbar.component';
@@ -27,6 +28,7 @@ export class ProductDetailPage implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     public cartService: CartService,
+    public authService: AuthService,
     private toast: ToastService,
   ) {}
 

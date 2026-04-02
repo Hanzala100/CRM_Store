@@ -81,8 +81,7 @@
     </ng-container>
 
     <!-- PRODUCTS SECTION -->
-    <ng-container *ngIf="storeConfigService.config$ | async as config">
-      <section *ngIf="config.layout.show_featured_products" id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <section id="products" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div class="flex items-center justify-between mb-10">
         <div>
           <h2 class="text-3xl font-bold text-slate-900 tracking-tight">Featured Products</h2>
@@ -134,7 +133,7 @@
               <!-- Add to Cart (Only if not in cart) -->
               <button *ngIf="getQuantity(product.id) === 0"
                 (click)="addToCart(product)"
-                [disabled]="product.stock === 0 || addingToCartId === product.id"
+                [disabled]="product.stock === 0 || addingToCartId === product.id || !authService.isLoggedIn"
                 class="w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200
                   bg-primary text-white hover:opacity-90 shadow-sm hover:shadow-md
                   disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed disabled:shadow-none
@@ -187,8 +186,7 @@
         <h3 class="text-slate-900 font-semibold text-xl mb-2">No products yet</h3>
         <p class="text-slate-500">Check back soon — great things are coming.</p>
       </div>
-      </section>
-    </ng-container>
+    </section>
 
     <app-footer></app-footer>
     <app-toast-container></app-toast-container>
